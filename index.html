@@ -157,7 +157,7 @@
         background-color: #41a3be;
       }
 
-            .web-button {
+      .web-button {
         position: absolute;
         top: 10px;
         left: 66px;
@@ -179,7 +179,7 @@
       .web-button:hover {
         background-color: #41a3be;
       }
-      
+
       .git-button {
         position: absolute;
         top: 10px;
@@ -294,6 +294,15 @@
         font-size: 18px
       }
 
+      h3 {
+        color: #f0f0f0;
+        margin-bottom: -5px;
+        margin-top: 7px;
+        padding: 0px 0px;
+        font-weight: bold;
+        font-size: 25px
+      }
+      
       .input-container {
         position: relative;
       }
@@ -367,7 +376,7 @@
 
       .copy-button {
         position: absolute;
-        top: 381px;
+        top: 429px;
         right: 45px;
         padding: 7.5px 15px;
         border: none;
@@ -510,7 +519,8 @@
         <label>hi there!</label>
         <br>
         <br>
-        <label>this a a neat little encoder/decoder tool made by dinguschan (dinguschan-owo!) use it to send secret messages to ur friends! by default it uses 9 encoding methods stacked on top of each other, which you can look at (and modify) in the settings popup ( <i class="fas fa-cog"></i> ) <br><br>this makes ur messages <i>super</i> &nbsphard to decode and read! and yes, your school admins can (and will) look at your chat messages sent on administration owned devices. encode your messages so they can't, or just don't send messages from those devices. remember kids, abstaination is the best form of prevention :D</label>
+        <label>this a a neat little encoder/decoder tool made by dinguschan (dinguschan-owo!) use it to send secret messages to ur friends! by default it uses 9 encoding methods stacked on top of each other, which you can look at (and modify) in the settings popup ( <i class="fas fa-cog"></i> ) <br>
+          <br>this makes ur messages <i>super</i> &nbsphard to decode and read! and yes, your school admins can (and will) look at your chat messages sent on administration owned devices. encode your messages so they can't, or just don't send messages from those devices. remember kids, abstaination is the best form of prevention :D </label>
         <br>
         <br>you can even add a custom key to make it even harder to crack, but make sure that ur key is only one word long, or it will break your message (ill fix it later, i promise :3) by default the key is "KEYWORD" so make sure your key is something different to make your messages harder to crack. <br>
         <br>if you want to turn off some encoding methods, just go into settings and flip the switch off for whichever method u don't like. you can also change the frequency of dead character injection (characters that don't translate to anything and are only used to jumble messages more) <br>
@@ -522,16 +532,16 @@
     </div>
     <div class="container">
       <h2>Encoder/Decoder</h2>
-      <h4>
-𝙼𝚊𝚍𝚎 𝚋𝚢 𝚍𝚒𝚗𝚐𝚞𝚜𝚌𝚑𝚊𝚗!      </h4>
+      <h4> 𝙼𝚊𝚍𝚎 𝚋𝚢 𝚍𝚒𝚗𝚐𝚞𝚜𝚌𝚑𝚊𝚗! </h4>
       <button class="settings-button" onclick="openModal()">
         <i class="fas fa-cog"></i>
       </button>
       <button class="git-button" onclick="openGit()">
         <i class="fa-brands fa-github"></i>
       </button>
-            <button class="web-button" onclick="openWeb()">
-              <i class="fa-solid fa-globe"></i></button>
+      <button class="web-button" onclick="openWeb()">
+        <i class="fa-solid fa-globe"></i>
+      </button>
       <button class="history-button" onclick="openHistoryModal()">
         <i class="fa-solid fa-question"></i>
       </button>
@@ -637,10 +647,10 @@
         const key = document.getElementById('vigenereKey').value.trim();
         const indicator = document.getElementById('keyIndicator');
         if (key.split(' ').length > 1) {
-          indicator.innerHTML = ' < i class = "fas fa-times-circle" > < /i>';
+          indicator.innerHTML = ' < i class = "fas fa-times-circle" >< /i>';
           indicator.style.color = '#ff5c5c';
         } else {
-          indicator.innerHTML = ' < i class = "fa-solid fa-circle-check" > < /i>';
+          indicator.innerHTML = ' < i class = "fa-solid fa-circle-check" >< /i>';
           indicator.style.color = '#21d498';
         }
       }
@@ -922,8 +932,8 @@
       function openGit() {
         window.open('https://github.com/dinguschan-owo/Encrypter-Decrypter', '_blank');
       }
-      
-            function openWeb() {
+
+      function openWeb() {
         window.open('https://encoder-decoder-nine.vercel.app/', '_blank');
       }
     </script>
