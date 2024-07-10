@@ -157,6 +157,29 @@
         background-color: #41a3be;
       }
 
+            .web-button {
+        position: absolute;
+        top: 10px;
+        left: 66px;
+        width: 44px;
+        height: 40px;
+        border: none;
+        border-radius: 11px;
+        background-color: #3b8ea5;
+        color: #f0f0f0;
+        cursor: pointer;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.3s ease;
+        padding: 0;
+      }
+
+      .web-button:hover {
+        background-color: #41a3be;
+      }
+      
       .git-button {
         position: absolute;
         top: 10px;
@@ -168,7 +191,7 @@
         background-color: #3b8ea5;
         color: #f0f0f0;
         cursor: pointer;
-        font-size: 24px;
+        font-size: 26px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -504,6 +527,8 @@
       <button class="git-button" onclick="openGit()">
         <i class="fa-brands fa-github"></i>
       </button>
+            <button class="web-button" onclick="openWeb()">
+        <i class="fa-solid fa-globe"></i>
       <button class="history-button" onclick="openHistoryModal()">
         <i class="fa-solid fa-question"></i>
       </button>
@@ -893,6 +918,10 @@
 
       function openGit() {
         window.open('https://github.com/dinguschan-owo/Encrypter-Decrypter', '_blank');
+      }
+      
+            function openWeb() {
+        window.open('https://encoder-decoder-nine.vercel.app/', '_blank');
       }
     </script>
   </body>
