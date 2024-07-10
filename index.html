@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encoder/Decoder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+      body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #202327;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        overflow-y: hidden;
+        overflow-x: hidden;
+      }
+
+      .container {
+        background-color: #2d3339;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        width: 600px;
+        text-align: center;
+        position: relative;
+        border: 5.5px;
+        border-style: solid;
+        border-color: #4f5964;
+        overflow-y: hidden;
+        overflow-x: hidden;
+      }
+
+      .frequency-container {
+        margin-bottom: 10px;
+        color: #f0f0f0;
+        text-align: left;
+      }
+
+      .frequency-container label {
+        display: block;
+        margin-bottom: 15px;
+      }
+
+      #frequencySlider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 10px;
+        background: #4f5963;
+        border-radius: 5px;
+        outline: none;
+        opacity: 0.9;
+        transition: opacity .15s ease-in-out;
+        position: relative;
+        margin-top: 5px;
+      }
+
+      #frequencySlider:hover {
+        opacity: 1;
+      }
+
+      #frequencySlider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: #21d498;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+        transition: background-color 0.3s ease;
+      }
+
+      #frequencySlider::-webkit-slider-thumb:hover {
+        background: #1fd699;
+      }
+
+      #frequencySlider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        background: #21d498;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+        transition: background-color 0.3s ease;
+      }
+
+      #frequencySlider::-moz-range-thumb:hover {
+        background: #38e0a8;
+      }
+
+      #frequencySlider::-moz-range-track {
+        background: #4f5963;
+        height: 10px;
+        border-radius: 5px;
+      }
+
+      #frequencySlider::-ms-thumb {
+        width: 20px;
+        height: 20px;
+        background: #1fc78f;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+        transition: background-color 0.3s ease;
+      }
+
+      #frequencySlider::-ms-thumb:hover {
+        background: #38e0a8;
+      }
+
+      #frequencySlider::-ms-track {
+        background: #4f5963;
+        height: 10px;
+        border-radius: 5px;
+        border-color: transparent;
+        color: transparent;
+      }
+
+      #frequencySlider::-ms-fill-lower {
+        background: #4f5963;
+        border-radius: 5px;
+      }
+
+      #frequencySlider::-ms-fill-upper {
+        background: #4f5963;
+        border-radius: 5px;
+      }
+
+      .history-button {
+        position: absolute;
+        top: 10px;
+        right: 66px;
+        width: 44.5px;
+        height: 40px;
+        border: none;
+        border-radius: 11px;
+        background-color: #3b8ea5;
+        color: #f0f0f0;
+        cursor: pointer;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.3s ease;
+        padding: 0;
+        font-weight: 6000;
+      }
+
+      .history-button:hover {
+        background-color: #41a3be;
+      }
+
+      .git-button {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 44px;
+        height: 40px;
+        border: none;
+        border-radius: 11px;
+        background-color: #3b8ea5;
+        color: #f0f0f0;
+        cursor: pointer;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.3s ease;
+        padding: 0;
+      }
+
+      .git-button:hover {
+        background-color: #41a3be;
+      }
+
+      .settings-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 44px;
+        height: 40px;
+        border: none;
+        border-radius: 11px;
+        background-color: #3b8ea5;
+        color: #f0f0f0;
+        cursor: pointer;
+        font-size: 23px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.3s ease;
+        padding: 0;
+      }
+
+      .settings-button:hover {
+        background-color: #41a3be;
+      }
+
+      textarea,
+      input[type="text"] {
+        width: 90%;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: 3px solid #4f5963;
+        border-radius: 10px;
+        font-size: 16px;
+        font-family: 'Roboto', sans-serif;
+        color: #fff;
+        background-color: #394047;
+        resize: none;
+      }
+
+      textarea:not(#vigenereKey),
+      input[type="text"]:not(#vigenereKey) {
+        padding-bottom: 95px;
+      }
+
+      textarea#vigenereKey,
+      input#vigenereKey {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+      }
+
+      ::placeholder {
+        color: white;
+        opacity: 0.7;
+      }
+
+      textarea:focus,
+      input:focus {
+        outline: none;
+      }
+
+      button {
+        padding: 12px 110px;
+        margin: 5px;
+        margin-bottom: 15px;
+        border: none;
+        border-radius: 11px;
+        background-color: #3b8ea5;
+        color: #f0f0f0;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #41a3be;
+      }
+
+      h2 {
+        color: #f0f0f0;
+        margin-bottom: 30px;
+        font-weight: bold;
+      }
+
+      h3 {
+        color: #f0f0f0;
+        margin-bottom: -5px;
+        padding: 0px 0px;
+        font-weight: bold;
+        font-size: 25px
+      }
+
+      .input-container {
+        position: relative;
+      }
+
+      .indicator {
+        position: absolute;
+        top: 9px;
+        right: 30px;
+        font-size: 23px;
+      }
+
+      .clear-button {
+        position: absolute;
+        top: 7px;
+        right: 25px;
+        padding: 7px 15.5px;
+        border: none;
+        border-radius: 10px;
+        background-color: #e24646;
+        color: #f0f0f0;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+      }
+
+      .clear-button:hover {
+        background-color: #ff5c5c;
+      }
+
+      .blob-button {
+        position: relative;
+        top: px;
+        right: 0px;
+        padding: 9px 9px;
+        border: none;
+        border-radius: 10px;
+        background-color: #3b8ea5;
+        color: #f0f0f0;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        margin: 2px;
+      }
+
+      .blob-button:hover {
+        background-color: #41a3be;
+      }
+
+      .blank-button {
+        position: relative;
+        top: px;
+        right: 0px;
+        padding: 9px 9px;
+        border: none;
+        border-radius: 10px;
+        background-color: #3b8ea5;
+        color: #f0f0f0;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        margin: 2px;
+        margin-left: 5px;
+      }
+
+      .blank-button:hover {
+        background-color: #41a3be;
+      }
+
+      .copy-button {
+        position: absolute;
+        top: 381px;
+        right: 45px;
+        padding: 7.5px 15px;
+        border: none;
+        border-radius: 10.5px;
+        background-color: #0dbf84;
+        color: #f0f0f0;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+        align-items: left;
+      }
+
+      .copy-button:hover {
+        background-color: #21d498;
+      }
+
+      .status-message {
+        color: #f0f0f0;
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      .vigenere-key {
+        margin-bottom: 15px;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 10000000000000000000000000000000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        overflow: none;
+      }
+
+      .modal-content {
+        background-color: #2d3339;
+        border-radius: 15px;
+        padding: 15px 20px;
+        width: 480px;
+        text-align: center;
+        color: #f0f0f0;
+        max-height: 420px;
+        overflow-y: scroll;
+        border: 5.5px;
+        border-style: solid;
+        border-color: #4f5964;
+      }
+
+      .modal-close {
+        color: #f0f0f0;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: -3px;
+      }
+
+      .modal-close:hover,
+      .modal-close:focus {
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .toggle-container {
+        text-align: left;
+        margin-top: 20px;
+      }
+
+      .toggle-container label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 9px;
+        font-size: 16px;
+        justify-content: space-between;
+      }
+
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+      }
+
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #a6a6a6;
+        transition: 0.4s;
+        border-radius: 20px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+
+      input:checked+.slider {
+        background-color: #21d498;
+      }
+
+      input:checked+.slider:before {
+        transform: translateX(20px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="historyModal" class="modal">
+      <div class="modal-content">
+        <span class="modal-close" onclick="closeHistoryModal()">&times;</span>
+        <h3>&nbsp&nbspHelp Desk (scroll for more)</h3>
+        <p>
+          <b>───────────────────────────────────────────</b>
+        </p>
+        <label>hi there!</label>
+        <br>
+        <br>
+        <label>this a a neat little encoder/decoder tool made by dinguschan (dinguschan-owo!) use it to send secret messages to ur friends! by default it uses 9 encoding methods stacked on top of each other, which you can look at (and modify) in the settings popup ( <i class="fas fa-cog"></i> ) <br><br>this makes ur messages <i>super</i> &nbsphard to decode and read! and yes, your school admins can (and will) look at your chat messages sent on administration owned devices. encode your messages so they can't, or just don't send messages from those devices. remember kids, abstaination is the best form of prevention :D</label>
+        <br>
+        <br>you can even add a custom key to make it even harder to crack, but make sure that ur key is only one word long, or it will break your message (ill fix it later, i promise :3) by default the key is "KEYWORD" so make sure your key is something different to make your messages harder to crack. <br>
+        <br>if you want to turn off some encoding methods, just go into settings and flip the switch off for whichever method u don't like. you can also change the frequency of dead character injection (characters that don't translate to anything and are only used to jumble messages more) <br>
+        <br>please note that even though there are options to open this project in a cloaked tab, the function itself is kinda broken at the moment. you can still try, but there will be issues. im working on it. <br>
+        <br>ok! thats all! go use this cool little tool now! also please share it with ur friends cause it really helps me a lot, i promise :3 <p>
+          <b>───────────────────────────────────────────</b>
+        </p>
+      </div>
+    </div>
+    <div class="container">
+      <h2>Encoder/Decoder</h2>
+      <button class="settings-button" onclick="openModal()">
+        <i class="fas fa-cog"></i>
+      </button>
+      <button class="git-button" onclick="openGit()">
+        <i class="fa-brands fa-github"></i>
+      </button>
+      <button class="history-button" onclick="openHistoryModal()">
+        <i class="fa-solid fa-question"></i>
+      </button>
+      <div class="input-container">
+        <textarea id="inputMessage" placeholder="Enter your message here..."></textarea>
+        <button class="clear-button" onclick="clearInput()">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </div>
+      <div class="input-container">
+        <input type="text" id="vigenereKey" class="vigenere-key" placeholder="Custom key: (One word)" oninput="validateKey()">
+        <i class="indicator" id="keyIndicator"></i>
+      </div>
+      <div>
+        <button onclick="encodeMessage()">Encode</button>
+        <button onclick="decodeMessage()">Decode</button>
+      </div>
+      <textarea id="outputMessage" placeholder="Output will appear here..." readonly></textarea>
+      <button class="copy-button" onclick="copyOutput()">
+        <i class="fa-solid fa-copy"></i>
+      </button>
+      <div class="status-message" id="statusMessage"></div>
+    </div>
+    <div id="settingsModal" class="modal">
+      <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <h3>&nbsp&nbspSettings (scroll for more)</h3>
+        <p>
+          <b>───────────────────────────────────────────</b>
+        </p>
+        <div class="toggle-container">
+          <label>Caesar Cipher <div class="toggle-switch">
+              <input type="checkbox" id="toggleCaesar" checked>
+              <span class="slider"></span>
+            </div>
+          </label>
+          <label>Octal <div class="toggle-switch">
+              <input type="checkbox" id="toggleOctal" checked>
+              <span class="slider"></span>
+            </div>
+          </label>
+          <label>Hexadecimal <div class="toggle-switch">
+              <input type="checkbox" id="toggleHex" checked>
+              <span class="slider"></span>
+            </div>
+          </label>
+          <label>Binary <div class="toggle-switch">
+              <input type="checkbox" id="toggleBinary" checked>
+              <span class="slider"></span>
+            </div>
+          </label>
+          <label>Base64 <div class="toggle-switch">
+              <input type="checkbox" id="toggleBase64" checked>
+              <span class="slider"></span>
+            </div>
+          </label>
+          <label>ROT13 <div class="toggle-switch">
+              <input type="checkbox" id="toggleRot13" checked>
+              <span class="slider"></span>
+            </div>
+          </label>
+          <label>Vigenère Cipher <div class="toggle-switch">
+              <input type="checkbox" id="toggleVigenere" checked>
+              <span class="slider"></span>
+            </div>
+          </label>
+          <label>Atbash <div class="toggle-switch">
+              <input type="checkbox" id="toggleAtbash" checked>
+              <span class="slider"></span>
+            </div>
+          </label>
+          <label>Dead Characters <div class="toggle-switch">
+              <input type="checkbox" id="toggleDeadLetters" checked>
+              <span class="slider"></span>
+            </div>
+          </label>
+        </div>
+        <p>
+          <b>───────────────────────────────────────────</b>
+        </p>
+        <div class="frequency-container">
+          <label for="frequencySlider">Dead Character Frequency:</label>
+          <input type="range" id="frequencySlider" min="1" max="10" value="1">
+          <br>
+          <br>
+          <span>&nbspEvery other character&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspEvery 10 characters</span>
+        </div>
+        <p>
+          <b>───────────────────────────────────────────</b>
+        </p>
+        <button class="blob-button" onclick="createBlobUrl()">&nbspOpen blob:&nbsp <i class="fa-solid fa-up-right-from-square"></i>
+        </button>
+        <button class="blank-button" onclick="openInBlankTab()">&nbspOpen about:blank&nbsp <i class="fa-solid fa-up-right-from-square"></i>
+        </button>
+        <p>
+          <b>───────────────────────────────────────────</b>
+        </p>
+      </div>
+    </div>
+    </div>
+    <script>
+      function validateKey() {
+        const key = document.getElementById('vigenereKey').value.trim();
+        const indicator = document.getElementById('keyIndicator');
+        if (key.split(' ').length > 1) {
+          indicator.innerHTML = ' < i class = "fas fa-times-circle" > < /i>';
+          indicator.style.color = '#ff5c5c';
+        } else {
+          indicator.innerHTML = ' < i class = "fa-solid fa-circle-check" > < /i>';
+          indicator.style.color = '#21d498';
+        }
+      }
+
+      function encodeMessage() {
+        const key = document.getElementById('vigenereKey').value.trim();
+        if (key.split(' ').length > 1) {
+          showMessage('Custom key must be one word to work properly', 'error');
+          return;
+        }
+        try {
+          const inputMessage = document.getElementById('inputMessage').value;
+          const vigenereKey = key || 'KEYWORD';
+          let encodedMessage = inputMessage;
+          if (document.getElementById('toggleCaesar').checked) {
+            encodedMessage = caesarEncode(encodedMessage);
+          }
+          if (document.getElementById('toggleVigenere').checked) {
+            encodedMessage = vigenereEncode(encodedMessage, vigenereKey);
+          }
+          if (document.getElementById('toggleOctal').checked) {
+            encodedMessage = octalEncode(encodedMessage);
+          }
+          if (document.getElementById('toggleHex').checked) {
+            encodedMessage = hexEncode(encodedMessage);
+          }
+          if (document.getElementById('toggleBinary').checked) {
+            encodedMessage = binaryEncode(encodedMessage);
+          }
+          if (document.getElementById('toggleBase64').checked) {
+            encodedMessage = base64Encode(encodedMessage);
+          }
+          if (document.getElementById('toggleRot13').checked) {
+            encodedMessage = rot13Encode(encodedMessage);
+          }
+          if (document.getElementById('toggleAtbash').checked) {
+            encodedMessage = atbashEncode(encodedMessage);
+          }
+          if (document.getElementById('toggleDeadLetters').checked) {
+            encodedMessage = injectDeadLetters(encodedMessage);
+          }
+          document.getElementById('outputMessage').value = encodedMessage;
+          showMessage('Message encoded successfully', 'success');
+        } catch (error) {
+          showMessage('An error occurred during encoding', 'error');
+        }
+      }
+
+      function decodeMessage() {
+        const key = document.getElementById('vigenereKey').value.trim();
+        if (key.split(' ').length > 1) {
+          showMessage('Custom key must be one word to work properly', 'error');
+          return;
+        }
+        try {
+          const inputMessage = document.getElementById('inputMessage').value;
+          const vigenereKey = key || 'KEYWORD';
+          let decodedMessage = inputMessage;
+          if (document.getElementById('toggleDeadLetters').checked) {
+            decodedMessage = removeDeadLetters(decodedMessage);
+          }
+          if (document.getElementById('toggleAtbash').checked) {
+            decodedMessage = atbashDecode(decodedMessage);
+          }
+          if (document.getElementById('toggleRot13').checked) {
+            decodedMessage = rot13Decode(decodedMessage);
+          }
+          if (document.getElementById('toggleBase64').checked) {
+            decodedMessage = base64Decode(decodedMessage);
+          }
+          if (document.getElementById('toggleBinary').checked) {
+            decodedMessage = binaryDecode(decodedMessage);
+          }
+          if (document.getElementById('toggleHex').checked) {
+            decodedMessage = hexDecode(decodedMessage);
+          }
+          if (document.getElementById('toggleOctal').checked) {
+            decodedMessage = octalDecode(decodedMessage);
+          }
+          if (document.getElementById('toggleVigenere').checked) {
+            decodedMessage = vigenereDecode(decodedMessage, vigenereKey);
+          }
+          if (document.getElementById('toggleCaesar').checked) {
+            decodedMessage = caesarDecode(decodedMessage);
+          }
+          document.getElementById('outputMessage').value = decodedMessage;
+        } catch (error) {
+          showMessage('An error occurred during decoding', 'error');
+        }
+      }
+
+      function clearInput() {
+        document.getElementById('inputMessage').value = '';
+        document.getElementById('outputMessage').value = '';
+        showMessage('Input and output cleared', '#ffff66');
+      }
+
+      function copyOutput() {
+        const outputMessage = document.getElementById('outputMessage');
+        outputMessage.select();
+        outputMessage.setSelectionRange(0, 99999);
+        document.execCommand('copy');
+        showMessage('Output copied to clipboard', '#ffff66');
+      }
+
+      function showMessage(message, type) {
+        const statusMessage = document.getElementById('statusMessage');
+        statusMessage.textContent = message;
+        statusMessage.style.color = type === 'error' ? '#ff5c5c' : (type === '#ffff66' ? '#ffff66' : '#21d498');
+        setTimeout(() => {
+          statusMessage.textContent = '';
+        }, 3000);
+      }
+
+      function openModal() {
+        document.getElementById('settingsModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        document.getElementById('settingsModal').style.display = 'none';
+        document.body.style.overflow = '';
+      }
+
+      function caesarEncode(str, shift = 3) {
+        return str.replace(/[a-z]/gi, char => {
+          const start = char <= 'Z' ? 65 : 97;
+          return String.fromCharCode(((char.charCodeAt(0) - start + shift) % 26) + start);
+        });
+      }
+
+      function caesarDecode(str, shift = 3) {
+        return caesarEncode(str, 26 - shift);
+      }
+
+      function vigenereEncode(plainText, key) {
+        return vigenere(plainText, key, 'encode');
+      }
+
+      function vigenereDecode(cipherText, key) {
+        return vigenere(cipherText, key, 'decode');
+      }
+
+      function vigenere(text, key, mode) {
+        const isEncode = mode === 'encode';
+        key = key.toUpperCase();
+        let result = '';
+        let j = 0;
+        for (let i = 0; i < text.length; i++) {
+          const c = text.charCodeAt(i);
+          if (65 <= c && c <= 90) {
+            result += String.fromCharCode((c - 65 + (isEncode ? key.charCodeAt(j % key.length) - 65 : 26 - (key.charCodeAt(j % key.length) - 65))) % 26 + 65);
+            j++;
+          } else if (97 <= c && c <= 122) {
+            result += String.fromCharCode((c - 97 + (isEncode ? key.charCodeAt(j % key.length) - 65 : 26 - (key.charCodeAt(j % key.length) - 65))) % 26 + 97);
+            j++;
+          } else {
+            result += text.charAt(i);
+          }
+        }
+        return result;
+      }
+
+      function octalEncode(str) {
+        return str.split('').map(char => char.charCodeAt(0).toString(8)).join(' ');
+      }
+
+      function octalDecode(str) {
+        return str.split(' ').map(char => String.fromCharCode(parseInt(char, 8))).join('');
+      }
+
+      function hexEncode(str) {
+        return str.split('').map(char => char.charCodeAt(0).toString(16)).join(' ');
+      }
+
+      function hexDecode(str) {
+        return str.split(' ').map(char => String.fromCharCode(parseInt(char, 16))).join('');
+      }
+
+      function binaryEncode(str) {
+        return str.split('').map(char => char.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+      }
+
+      function binaryDecode(str) {
+        return str.split(' ').map(char => String.fromCharCode(parseInt(char, 2))).join('');
+      }
+
+      function base64Encode(str) {
+        return btoa(str).replace(/=+$/, '');
+      }
+
+      function base64Decode(str) {
+        return atob(str);
+      }
+
+      function rot13Encode(str) {
+        return str.replace(/[a-z]/gi, char => {
+          const start = char <= 'Z' ? 65 : 97;
+          return String.fromCharCode(((char.charCodeAt(0) - start + 13) % 26) + start);
+        });
+      }
+
+      function rot13Decode(str) {
+        return rot13Encode(str);
+      }
+
+      function atbashEncode(str) {
+        return str.replace(/[a-z]/gi, char => {
+          const start = char <= 'Z' ? 65 : 97;
+          return String.fromCharCode(start + 25 - (char.charCodeAt(0) - start));
+        });
+      }
+
+      function atbashDecode(str) {
+        return atbashEncode(str);
+      }
+
+      function injectDeadLetters(str) {
+        const frequencyValue = document.getElementById('frequencySlider').value;
+        let result = '';
+        for (let i = 0; i < str.length; i++) {
+          result += str[i];
+          if ((i + 1) % frequencyValue === 0) {
+            result += getRandomDeadLetter();
+          }
+        }
+        return result;
+      }
+
+      function removeDeadLetters(str) {
+        const frequencyValue = parseInt(document.getElementById('frequencySlider').value);
+        let result = '';
+        let counter = 0;
+        for (let i = 0; i < str.length; i++) {
+          if ((counter + 1) % (frequencyValue + 1) === 0) {
+            counter = 0;
+          } else {
+            result += str[i];
+            counter++;
+          }
+        }
+        return result;
+      }
+
+      function getRandomDeadLetter() {
+        const alphabet = '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm';
+        return alphabet[Math.floor(Math.random() * alphabet.length)];
+      }
+
+      function createBlobUrl() {
+        var outerHTML = document.documentElement.outerHTML;
+        var blob = new Blob([outerHTML], {
+          type: 'text/html'
+        });
+        var blobUrl = URL.createObjectURL(blob);
+        var newTab = window.open();
+        newTab.document.write(' < !DOCTYPE html >< html >< head >< title > Page Content < /title>< /head>< body >< /body>< /html>');
+        newTab.document.close();
+        newTab.location.href = blobUrl;
+      }
+
+      function openInBlankTab() {
+        const outerHTML = document.documentElement.outerHTML;
+        const newTab = window.open("about:blank");
+        newTab.document.write(outerHTML);
+        newTab.document.close();
+      }
+
+      function openHistoryModal() {
+        document.getElementById('historyModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeHistoryModal() {
+        document.getElementById('historyModal').style.display = 'none';
+        document.body.style.overflow = '';
+      }
+
+      function openGit() {
+        window.open('https://github.com/dinguschan-owo/Encrypter-Decrypter', '_blank');
+      }
+    </script>
+  </body>
+</html>
